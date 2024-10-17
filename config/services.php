@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'vrchat' => [
+        'username' => env('VRCHAT_USERNAME'),
+        'password' => env('VRCHAT_PASSWORD'),
+        'apikey' => env('VRCHAT_API_KEY', 'us-east-1'),
+    ],
 ];
