@@ -19,33 +19,34 @@ use App\Http\Controllers\ReviewController;
 */
 
 // ワールド関係のルーティング
-Route::controller(WorldController::class)->group(function(){
+Route::controller(WorldController::class)->group(function () {
     Route::get('/auth_2FA_first', 'auth_2FA_first')->name('auth_2FA_first');
     Route::post('/auth_2FA_second', 'auth_2FA_second')->name('auth_2FA_second');
 
     Route::get('/', 'home')->name('home');
-    Route::get('/worlds', 'worlds')->name('worlds');
+    // Route::get('/worlds', 'worlds')->name('worlds');
     Route::post('/worlds/search', 'search')->name('search');
+    Route::get('/worlds/search', 'index')->name('index');
     Route::get('/worlds/{world_id}', 'world')->name('world');
 });
 
 // ユーザー関係のルーティング
-Route::controller(UserController::class)->group(function(){
+Route::controller(UserController::class)->group(function () {
     // ユーザーページ表示
-    Route::get('/users/{user_name}', 'userpage')->name('userpage');
+    Route::get('/users/{user_id}', 'userpage')->name('userpage');
 });
 
-Route::controller(UserController::class)->middleware(['auth'])->group(function(){
+Route::controller(UserController::class)->middleware(['auth'])->group(function () {
     // favorite編集
-    Route::post('/users/{user_name}/favorite/{world_id}', 'create_favorite')->name('favorite.create');
-    Route::delete('/users/{user_name}/favorite/{world_id}', 'delete_favorite')->name('favorite.delete');
+    Route::post('/users/{user_id}/favorite/{world_id}', 'create_favorite')->name('favorite.create');
+    Route::delete('/users/{user_id}/favorite/{world_id}', 'delete_favorite')->name('favorite.delete');
     // visited編集
-    Route::post('/users/{user_name}/visited/{world_id}', 'create_visited')->name('visited.create');
-    Route::delete('/users/{user_name}/visited/{world_id}', 'delete_visited')->name('visited.delete');
+    Route::post('/users/{user_id}/visited/{world_id}', 'create_visited')->name('visited.create');
+    Route::delete('/users/{user_id}/visited/{world_id}', 'delete_visited')->name('visited.delete');
 });
 
 // 口コミ関係のルーティング
-Route::controller(ReviewController::class)->middleware(['auth'])->group(function(){
+Route::controller(ReviewController::class)->middleware(['auth'])->group(function () {
     // 口コミ作成
     Route::get('/reviews/{world_id}/create', 'create')->name('review.create');
     Route::post('/reviews', 'store')->name('review.store');
@@ -68,4 +69,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
