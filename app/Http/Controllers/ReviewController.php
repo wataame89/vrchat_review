@@ -18,9 +18,9 @@ class ReviewController extends Controller
 
     public function create($world_id)
     {
-        return view('reviews/create')->with('world_id',$world_id);
+        return view('reviews/create')->with('world_id', $world_id);
     }
-    
+
     public function store(Request $request, Review $review)
     {
         $input = $request['review'];
@@ -29,16 +29,16 @@ class ReviewController extends Controller
         return redirect('/worlds/' . $input['world_id']);
     }
 
-    public function edit($world_id,$review_id)
+    public function edit($world_id, $review_id)
     {
         $review = Review::where('id', $review_id)->first();
         return view('reviews/edit')->with([
-            'world_id'=> $world_id,
-            'review'=> $review
+            'world_id' => $world_id,
+            'review' => $review
         ]);
     }
 
-    public function update($review_id,Request $request)
+    public function update($review_id, Request $request)
     {
         $review = Review::where('id', $review_id)->first();
         $input = $request['review'];
@@ -47,10 +47,10 @@ class ReviewController extends Controller
         return redirect('/worlds/' . $input['world_id']);
     }
 
-    public function delete($review_id,Request $request)
+    public function delete($review_id, Request $request)
     {
         $review = Review::where('id', $review_id)->first();
         $review->delete();
-        return redirect('/worlds/'.$request['world_id']);
+        return redirect('/worlds/' . $request['world_id']);
     }
 }
