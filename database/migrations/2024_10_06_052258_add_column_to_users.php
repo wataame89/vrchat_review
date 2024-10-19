@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('image_path');
-            $table->string('vrchat_id');
+            $table->string('image_path')->default('');
+            $table->string('vrchat_id')->default('');
         });
     }
 

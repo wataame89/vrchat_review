@@ -19,9 +19,9 @@ return new class extends Migration
             $table->integer('rank');
             $table->string('world_id');
             $table->integer('user_id');
-            $table->integer('liked');
-            $table->integer('disliked');
-            $table->integer('reported');
+            $table->integer('liked')->default(0);
+            $table->integer('disliked')->default(0);
+            $table->integer('reported')->default(0);
         });
     }
 

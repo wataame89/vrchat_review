@@ -18,27 +18,43 @@ use App\Http\Controllers\ReviewController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('mainpage');
-// });
-
 // ワールド関係のルーティング
 Route::controller(WorldController::class)->group(function(){
-    Route::get('/', 'home')->name('home');
     Route::get('/auth_2FA_first', 'auth_2FA_first')->name('auth_2FA_first');
     Route::post('/auth_2FA_second', 'auth_2FA_second')->name('auth_2FA_second');
-    Route::get('/world', 'world')->name('world');
 
+    Route::get('/', 'home')->name('home');
+    Route::get('/worlds', 'worlds')->name('worlds');
+    Route::post('/worlds/search', 'search')->name('search');
+    Route::get('/worlds/{world_id}', 'world')->name('world');
 });
 
 // ユーザー関係のルーティング
+Route::controller(UserController::class)->group(function(){
+    // ユーザーページ表示
+    Route::get('/users/{user_name}', 'userpage')->name('userpage');
+});
+
 Route::controller(UserController::class)->middleware(['auth'])->group(function(){
-    // Route::get('/', 'index')->name('index');
+    // favorite編集
+    Route::post('/users/{user_name}/favorite/{world_id}', 'create_favorite')->name('favorite.create');
+    Route::delete('/users/{user_name}/favorite/{world_id}', 'delete_favorite')->name('favorite.delete');
+    // visited編集
+    Route::post('/users/{user_name}/visited/{world_id}', 'create_visited')->name('visited.create');
+    Route::delete('/users/{user_name}/visited/{world_id}', 'delete_visited')->name('visited.delete');
 });
 
 // 口コミ関係のルーティング
 Route::controller(ReviewController::class)->middleware(['auth'])->group(function(){
-    // Route::get('/', 'index')->name('index');
+    // 口コミ作成
+    Route::get('/reviews/{world_id}/create', 'create')->name('review.create');
+    Route::post('/reviews', 'store')->name('review.store');
+
+    // 各口コミ設定
+    // Route::get('/reviews/{review_id}', 'show')->name('review.show');
+    Route::get('/reviews/{world_id}/{review_id}/edit', 'edit')->name('review.edit');
+    Route::put('/reviews/{review_id}', 'update')->name('review.update');
+    Route::delete('/reviews/{review_id}', 'delete')->name('review.delete');
 });
 
 // breeze由来のルーティング
