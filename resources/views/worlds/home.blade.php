@@ -13,7 +13,8 @@
                         <!-- ここにタスクが表示される -->
                     </div>{{ $status }}
                 </div>
-                <a href="/auth_2FA_first">メール送信</a>
+                <a href="/auth_2FA">二段階認証</a>
+                {{-- <a href="/auth_2FA_first">メール送信</a>
                 <form action="/auth_2FA_second" method="POST">
                     @csrf
                     <div class="code">
@@ -21,7 +22,7 @@
                         <input type="number" name="post" placeholder="000000" />
                     </div>
                     <input type="submit" value="送信" />
-                </form>
+                </form> --}}
 
                 <form action="/worlds/search" method="POST">
                     @csrf

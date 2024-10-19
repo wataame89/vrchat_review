@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VRChatController;
 use App\Http\Controllers\WorldController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReviewController;
@@ -17,12 +18,16 @@ use App\Http\Controllers\ReviewController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// VRChat関係のルーティング
+Route::controller(VRChatController::class)->group(function () {
+    Route::get('/auth_2FA', 'auth_2FA')->name('auth_2FA');
+    // Route::get('/auth_2FA_first', 'auth_2FA_first')->name('auth_2FA_first');
+    // Route::post('/auth_2FA_second', 'auth_2FA_second')->name('auth_2FA_second');
+    // Route::get('/getOneTimeCode', 'getOneTimeCode')->name('getOneTimeCode');
+});
 
 // ワールド関係のルーティング
 Route::controller(WorldController::class)->group(function () {
-    Route::get('/auth_2FA_first', 'auth_2FA_first')->name('auth_2FA_first');
-    Route::post('/auth_2FA_second', 'auth_2FA_second')->name('auth_2FA_second');
-
     Route::get('/', 'home')->name('home');
     // Route::get('/worlds', 'worlds')->name('worlds');
     Route::post('/worlds/search', 'search')->name('search');
