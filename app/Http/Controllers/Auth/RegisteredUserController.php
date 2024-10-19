@@ -40,6 +40,8 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'image_path' => "",
+            'vrchat_id' => "",
         ]);
 
         event(new Registered($user));

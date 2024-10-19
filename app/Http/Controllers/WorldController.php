@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 
-
+use App\Models\Review;
 
 
 class WorldController extends Controller
@@ -19,49 +21,34 @@ class WorldController extends Controller
 
     public function auth_2FA_first()
     {
-        $username = config('services.vrchat.username');
-        $password = config('services.vrchat.password');
-        $apikey = config('services.vrchat.apikey');
-
         // クライアントインスタンス生成
         $client = new Client();
+
+        //クッキーインスタンス作成
         $cookieJar = new CookieJar();
 
         // GET通信するURL
         $url = 'https://api.vrchat.cloud/api/1/auth/user';
-        // $url = 'https://vrchat.com/api/1/auth/exists?email=wataame200189@yahoo.co.jp';
-        // $url = 'https://umayadia-apisample.azurewebsites.net/api/persons';
 
         // リクエスト送信と返却データの取得
         // User-Agent設定が適切でない場合、403エラーが発生する
         $response = $client->request('GET', $url, [
                 'headers' => [
-                    "User-Agent" => $username
+                    "User-Agent" => config('services.vrchat.username')
                 ],
                 'data' => [
-                    'apiKey'=>$apikey
+                    'apiKey'=> config('services.vrchat.apikey')
                 ], 
                 'cookies' => $cookieJar,
-                'auth' => [$username, $password]
+                'auth' => [
+                    config('services.vrchat.username'),
+                    config('services.vrchat.password')
                 ]
-        );
+        ]);
         echo $response->getBody();
-        // $cookies = $cookieJar->toArray();
-        
-        // dump($response);
-        // dump($response_body);
-        // dump($cookies);
 
-        // print_r($cookieJar->toArray());
-        // $this->authcookie = $cookies[0]["Value"];
-        // $this->authcookie = new CookieJar();
-        // $this->authcookie = $cookieJar;
-        // print_r($this->authcookie->toArray());
-        // echo $authcookie = $cookies['value'];
-        // $questions = json_decode($response->getBody(), true);
-
-        // print($cookies[0]["Value"]);
-        session(['authcookie' => $cookieJar]);
+        //クッキーを保存
+        session(['authcookieJar' => $cookieJar]);
 
         return view('test/2fa');
         // return redirect('/');
@@ -69,21 +56,8 @@ class WorldController extends Controller
 
     public function auth_2FA_second(Request $request){
         $authcode = $request['post'];
-        $authcookie = session('authcookie');
-        // $username = config('services.vrchat.username');
+        $cookieJar = session('authcookieJar');
 
-        // print($authcode);
-        // print($authcookie);
-        // $a=$this->authcookie->toArray();
-        // var_dump($a[0]["Value"]);
-        // echo '<script>';
-        // echo 'console.log('. json_encode( $authcode ) .')';
-        // echo '</script>';
-        
-        // $cookieJar = CookieJar::fromArray([
-        //     'auth' => $authcookie
-        // ], 'api.vrchat.cloud');
-        
         $url = 'https://api.vrchat.cloud/api/1/auth/twofactorauth/emailotp/verify';
 
         $client = new Client();
@@ -93,50 +67,25 @@ class WorldController extends Controller
                 'User-Agent' => config('services.vrchat.username'),
                 'Content-Type' => 'application/json',
             ],
-            'cookies' => $authcookie,
+            'cookies' => $cookieJar,
             'json' => [
                 'code' => $authcode
             ]
         ]);
         echo $response->getBody();
         
-        dump($response);
-        dump($response->getBody());
-        dump($authcookie);
+        // dump($response);
+        // dump($response->getBody());
+        // dump($cookieJar);
 
-        
-        session(['authcookieJar' => $authcookie]);
+        session(['authcookieJar' => $cookieJar]);
 
         return view('test/2fa');
         // return redirect('/');
     }
     
-    public function world()
+    public function worlds()
     {
-        $username = config('services.vrchat.username');
-        $authcookie = session('authcookieJar');
-        $apikey = config('services.vrchat.apikey');
-        
-        // $authcookie->clear("twoFactorAuth");
-        // dump($authcookie);
-        $a = $authcookie->toArray();
-        // dump($a);
-        // echo $b = $a[0]["Value"];
-
-        $cookieJar = CookieJar::fromArray([
-            'auth' => $a[0]["Value"]
-        ], 'vrchat.com');
-        
-        // $cookieJar =  new CookieJar();
-        // $cookieJar[]
-        \Debugbar::addMessage($authcookie);
-
-        // dump($cookieJar);
-
-        $url = 'https://api.vrchat.com/api/1/worlds';
-
-        $client = new Client();
-
         // Set the query parameters
         $queryParams = [
             'featured' => 'false',
@@ -149,28 +98,111 @@ class WorldController extends Controller
             'n' => '3',
         ];
 
-        $response = $client->request('GET', $url,[
-            // 'headers' => [
-            //     'User-Agent' => config('services.vrchat.username'),
-            //     'Content-Type' => 'application/json',
-            // ],
-            // 'data' => [
-            //     'apiKey'=>$apikey
-            // ], 
-            'cookies' => $cookieJar,
-            'query' => $queryParams
-        ]);
-        echo $response->getBody();
-        dd("Success");
+        $worlds = $this->searchWorlds($queryParams);
+
+        dump($worlds);
+        
         
         
         return view('worlds/worlds')->with([
-            // 'posts' => $post->getPaginateByLimit(10),
-            // 'questions' => $questions['questions'],
+           'worlds' =>  $worlds
         ]);
     }
     
-    public function search(Request $request){
+    public function search(Request $request, Review $review){
+        $serchname = $request['post'];
         
+        
+        // Set the query parameters
+        $queryParams = [
+            'featured' => 'false',
+            'sort' => 'popularity',
+            // 'userId' => '',
+            'order' => 'ascending',
+            'search' => $serchname,
+            // 'tag' => '',
+            // 'notag' => '',
+            'n' => '30',
+        ];
+
+        $worlds = $this->searchWorlds($queryParams);
+
+        dump($worlds);
+        
+        return view('worlds/worlds')->with([
+            'worlds' =>  $worlds
+         ]);
+    }
+
+    public function world($world_id)
+    {
+        $world =  $this->getWorldByID($world_id);
+        // レビュー情報の取得
+        $reviews = $this->getReviews("world_id",$world_id);
+
+        dump($world);
+        dump($reviews);
+        
+        return view('worlds/world')->with([
+           'world' =>  $world,
+           'reviews' =>  $reviews
+        ]);
+    }
+
+    private function getReviews($columnName, $columnValue){
+        try{
+            $reviews = Review::where($columnName,$columnValue)->get();
+        }
+        catch(ModelNotFoundException $e){
+            return null;
+        }
+        return $reviews;
+    }
+    private function searchWorlds($queryParams){
+        $cookieJar = CookieJar::fromArray([
+            'auth' => session('authcookieJar')->toArray()[0]["Value"]
+        ], 'vrchat.com');
+
+        $url = 'https://api.vrchat.com/api/1/worlds';
+
+        $client = new Client();
+        
+        try{
+            $response = $client->request('GET', $url,[
+                'cookies' => $cookieJar,
+                'query' => $queryParams
+            ]);
+        }
+        catch(Exception  $e){
+            dump($e);
+            return null;
+        }
+
+        $worlds = json_decode($response->getBody());
+
+        return $worlds;
+    }
+    private function getWorldByID($world_id){
+        $cookieJar = CookieJar::fromArray([
+            'auth' => session('authcookieJar')->toArray()[0]["Value"]
+        ], 'vrchat.com');
+
+        $url = 'https://api.vrchat.com/api/1/worlds/'.$world_id;
+
+        $client = new Client();
+        
+        try{
+            $response = $client->request('GET', $url,[
+                'cookies' => $cookieJar,
+            ]);
+        }
+        catch(Exception  $e){
+            dump($e);
+            return null;
+        }
+
+        $world = json_decode($response->getBody());
+
+        return $world;
     }
 }
