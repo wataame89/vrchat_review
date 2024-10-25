@@ -24,10 +24,10 @@ class WorldController extends Controller
         $queryParams = [
             'n' => '1',
         ];
-        dump(Cache::get('authcookieJar'));
+        // dump(Cache::get('authcookieJar'));
         $status = '';
         $worlds = $this->searchWorlds($queryParams);
-        dump($worlds);
+        // dump($worlds);
         if ($worlds) {
             $status = 'Status: VRChat authorized';
         } else {

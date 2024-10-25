@@ -32,7 +32,7 @@
                             @if (Auth::user())
                                 <div>{{ Auth::user()->name }}</div>
                             @else
-                                <div>Login / Register</div>
+                                <div>ログイン / 登録</div>
                             @endif
 
                             <div class="ms-1">
@@ -49,7 +49,7 @@
                     <x-slot name="content">
                         @if (Auth::user())
                             <x-dropdown-link :href="route('userpage', ['user_id' => Auth::user()->id])">
-                                {{ __('Mypage') }}
+                                {{ __('マイページ') }}
                             </x-dropdown-link>
 
                             <x-dropdown-link :href="route('profile.edit')">
