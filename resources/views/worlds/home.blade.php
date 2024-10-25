@@ -1,12 +1,10 @@
 <x-app-layout>
 
     <body>
-        <header>
-            <nav class="my-navbar">
-                <a class="my-navbar-brand" href="/">VRChat Review</a>
-            </nav>
-        </header>
         <main>
+            <div class="bg-orange-100">
+                <a class="my-navbar-brand" href="/">VRChat Review</a>
+            </div>
             <div class="container">
                 <div class="row">
                     <div class="column col-md-8">
