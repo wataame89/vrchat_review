@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
+use Cache;
 
 use App\Models\Review;
 use App\Models\User;
@@ -21,9 +22,9 @@ class UserController extends Controller
         $user = $this->getUser('id', $user_id);
         $favorite_worlds = $this->getFavoriteWorlds($user_id);
         $visited_worlds = $this->getVisitedWorlds($user_id);
-        dump($user_id);
-        dump($favorite_worlds);
-        dump($visited_worlds);
+        // dump($user_id);
+        // dump($favorite_worlds);
+        // dump($visited_worlds);
 
         return view('users/userpage')->with([
             'user' => $user,
@@ -134,7 +135,7 @@ class UserController extends Controller
     private function getWorldByID($world_id)
     {
         $cookieJar = CookieJar::fromArray([
-            'auth' => session('authcookieJar')->toArray()[0]["Value"]
+            'auth' => Cache::get('authcookieJar')->toArray()[0]["Value"]
         ], 'vrchat.com');
 
         $url = 'https://api.vrchat.com/api/1/worlds/' . $world_id;

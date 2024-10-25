@@ -78,11 +78,11 @@ class WorldController extends Controller
             'search' => $search['keyword'],
             // 'tag' => '',
             // 'notag' => '',
-            'n' => '30',
+            'n' => '15',
         ];
 
         $worlds = $this->searchWorlds($queryParams);
-        dump($worlds);
+        // dump($worlds);
         session(['worlds' => $worlds]);
         // jsonエンコードにより、object形式を保つ
         return redirect()->route('index', [
@@ -104,7 +104,7 @@ class WorldController extends Controller
         \Debugbar::addMessage($search);
 
         // ページネート
-        $perPage = 10;  // 1ページあたりの件数
+        $perPage = 12;  // 1ページあたりの件数
         $page = $request->input('page', 1);  // 現在のページ (クエリパラメータから取得)
         // dump($page);
         $paginatedWorlds = $this->paginateArray($worlds, $perPage, $page, ['path' => '/worlds/search']);
