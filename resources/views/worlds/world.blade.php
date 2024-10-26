@@ -2,15 +2,19 @@
 
     <body>
         @include('layouts.world_template')
-        <h2 class='title'>{{ $world->description }}</h2>
-        <h2 class='title'>{{ $world->authorName }}</h2>
+        <a href="https://vrchat.com/home/world/{{ $world->id }}">Go</a>
+        <div class=''>{{ $world->description }}</div>
+        <div class=''>{{ $world->authorName }}</div>
+        <div class=''>{{ $world->capacity }}</div>
+        <div class=''>{{ $world->created_at }}</div>
+        <div class=''>{{ $world->updated_at }}</div>
         @if ($reviews)
             @foreach ($reviews as $review)
-                <div class='review'>
+                <div class=''>
                     <p>
                         {{ $review->rank }}
                     </p>
-                    <h2 class='title'>{{ $review->title }}</h2>
+                    <h2 class=''>{{ $review->title }}</h2>
                     <p>
                         {{ $review->body }}
                     </p>
@@ -25,8 +29,8 @@
             @endforeach
         @endif
         <a href="/reviews/{{ $world->id }}/create">口コミを投稿する</a>
-        <a href="/">return</a>
     </body>
+
     <script>
         function deletePost(id) {
             'use strict'

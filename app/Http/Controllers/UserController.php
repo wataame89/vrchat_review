@@ -14,10 +14,11 @@ use App\Models\Review;
 use App\Models\User;
 use App\Models\Favorite_world;
 use App\Models\Visited_world;
+use App\Models\World;
 
 class UserController extends Controller
 {
-    public function userpage($user_id)
+    public function userpage($user_id, World $virtualWorld)
     {
         $user = $this->getUser('id', $user_id);
         $favorite_worlds = $this->getFavoriteWorlds($user_id);
@@ -29,69 +30,55 @@ class UserController extends Controller
         return view('users/userpage')->with([
             'user' => $user,
             'favorite_worlds' => $favorite_worlds,
-            'visited_worlds' => $visited_worlds
+            'visited_worlds' => $visited_worlds,
+            'virtualWorld' => $virtualWorld
         ]);
     }
 
-    public function create_favorite($user_id, $world_id, Favorite_world $favorite_world)
+    public function toggle_favorite($user_id, $world_id, Favorite_world $favorite_world)
     {
-        // dump($world_id);
-        // dump($user_id);
-        $isExist = Favorite_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->exists();
+        $isAlreadlFavorited = Favorite_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->exists();
 
-        if (!$isExist) {
+        if (!$isAlreadlFavorited) {
             $favorite_world->fill([
                 'user_id' => $user_id,
                 'world_id' => $world_id
             ])->save();
+        } else {
+            Favorite_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->delete();
         }
 
-        return redirect('/users/' . $user_id);
+        $worlds_count = Favorite_world::where('world_id', $world_id)->get()->count();
+
+        $param = [
+            'favoriteCount' => $worlds_count,
+        ];
+
+        // return redirect('/users/' . $user_id);
+        return response()->json($param);
     }
 
-    public function delete_favorite($user_id, $world_id)
+    public function toggle_visited($user_id, $world_id, Visited_world $visited_world)
     {
-        // dump($world_id);
-        // dump($user_id);
-        $target = Favorite_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->first();
+        $isAlreadlVisited = Visited_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->exists();
 
-        // ユーザーが存在する場合は削除
-        if ($target) {
-            $target->delete();
-        }
-
-        return redirect('/users/' . $user_id);
-    }
-
-    public function create_visited($user_id, $world_id, Visited_world $visited_world)
-    {
-        // dump($world_id);
-        // dump($user_id);
-        $isExist = Visited_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->exists();
-
-        if (!$isExist) {
+        if (!$isAlreadlVisited) {
             $visited_world->fill([
                 'user_id' => $user_id,
                 'world_id' => $world_id
             ])->save();
+        } else {
+            Visited_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->delete();
         }
 
-        return redirect('/reviews/' . $world_id . '/create');
+        $worlds_count = Visited_world::where('world_id', $world_id)->get()->count();
+
+        $param = [
+            'visitedCount' => $worlds_count,
+        ];
+
         // return redirect('/users/' . $user_id);
-    }
-
-    public function delete_visited($user_id, $world_id)
-    {
-        // dump($world_id);
-        // dump($user_id);
-        $target = Visited_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->first();
-
-        // ユーザーが存在する場合は削除
-        if ($target) {
-            $target->delete();
-        }
-
-        return redirect('/users/' . $user_id);
+        return response()->json($param);
     }
 
     private function getUser($columnName, $columnValue)

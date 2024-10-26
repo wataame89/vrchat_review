@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-green-300 border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-gray-800 border-b border-gray-500">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -30,18 +30,18 @@
                         </x-nav-link>
                     @endif
 
-                    <div
-                        class = "inline-flex items-center px-5 pt-5 text-sm font-medium leading-5 text-gray-900 break-keep focus:outline-none transition duration-150 ease-in-out">
+                    <div class = "inline-flex items-center px-5 text-sm font-medium text-white mr-0">
                         <form action="/worlds/search" method="POST">
                             @csrf
                             <span class ="text-base">
                                 Search
                             </span>
-                            <input type="text" name="search[keyword]" placeholder="world name" value="" />
+                            <input class = "text-gray-600" type="text" name="search[keyword]"
+                                placeholder="world name" value="" />
                             <span class ="pl-2 text-base">
                                 Sort
                             </span>
-                            <select name="search[sort]" class="cursor-pointer">
+                            <select name="search[sort]" class="cursor-pointer text-gray-600">
                                 <option value="popularity">popularity</option>
                                 {{-- <option value="_created_at">_created_at</option>
                                         <option value="_updated_at">_updated_at</option> --}}
@@ -52,7 +52,7 @@
                             <label for="switch" class ="pl-2 cursor-pointer">
                                 <input type="checkbox" id="switch" name="sortByReview" value="on" />
                                 口コミ優先
-                            </label><span class ="pl-2">
+                            </label><span class ="pl-2 text-gray-600">
                                 <input type="submit" value="検索"
                                     class = "inline-block h-10 px-4 items-center justify-center rounded-md border border-gray-200 bg-white hover:bg-gray-100 cursor-pointer active:bg-gray-300 focus:outline-none" />
                             </span>

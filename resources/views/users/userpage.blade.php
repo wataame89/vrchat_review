@@ -3,7 +3,7 @@
     <body>
         <div class="text-xl">Mypage of {{ $user->name }}</div>
 
-        <div class="text-center text-xl">Favorite World</div>
+        <div class="text-center text-xl bold">Favorite World</div>
         <div class="text-center flex flex-wrap justify-center">
             @foreach ($favorite_worlds as $world)
                 @include('layouts.world_template')

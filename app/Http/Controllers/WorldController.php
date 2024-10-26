@@ -11,6 +11,7 @@ use GuzzleHttp\Cookie\CookieJar;
 use Cache;
 
 use App\Models\Review;
+use App\Models\World;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -25,6 +26,7 @@ class WorldController extends Controller
             'n' => '1',
         ];
         // dump(Cache::get('authcookieJar'));
+        // dump(Cache::get('authcookieJar')->toArray());
         $status = '';
         $worlds = $this->searchWorlds($queryParams);
         // dump($worlds);
@@ -92,16 +94,16 @@ class WorldController extends Controller
         ]);
     }
 
-    public function index(Request $request, Review $review)
+    public function index(Request $request, Review $review, World $virtualWorld)
     {
         // $worlds = json_decode($request['worlds'], false);
         $worlds = session('worlds');
         $search = $request['search'];
         $search['keyword'] = !empty($search['keyword']) ? $search['keyword'] : "";
         $sortByReview = $request['sortByReview'];
-        dump($worlds);
+        // dump($worlds);
         // \Debugbar::addMessage($request['worlds']);
-        \Debugbar::addMessage($search);
+        // \Debugbar::addMessage($search);
 
         // ページネート
         $perPage = 12;  // 1ページあたりの件数
@@ -114,11 +116,12 @@ class WorldController extends Controller
         return view('worlds/search')->with([
             'worlds' => $paginatedWorlds,
             'search' => $search,
-            'sortByReview' => $sortByReview
+            'sortByReview' => $sortByReview,
+            'virtualWorld' => $virtualWorld
         ]);
     }
 
-    public function world($world_id)
+    public function world($world_id, World $virtualWorld)
     {
         $world = $this->getWorldByID($world_id);
         // レビュー情報の取得
@@ -129,7 +132,8 @@ class WorldController extends Controller
 
         return view('worlds/world')->with([
             'world' => $world,
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'virtualWorld' => $virtualWorld
         ]);
     }
 

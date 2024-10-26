@@ -43,11 +43,11 @@ Route::controller(UserController::class)->group(function () {
 
 Route::controller(UserController::class)->middleware(['auth'])->group(function () {
     // favorite編集
-    Route::post('/users/{user_id}/favorite/{world_id}', 'create_favorite')->name('favorite.create');
-    Route::delete('/users/{user_id}/favorite/{world_id}', 'delete_favorite')->name('favorite.delete');
+    Route::post('/users/{user_id}/favorite/{world_id}', 'toggle_favorite')->name('favorite.toggle');
+    // Route::delete('/users/{user_id}/favorite/{world_id}', 'delete_favorite')->name('favorite.delete');
     // visited編集
-    Route::post('/users/{user_id}/visited/{world_id}', 'create_visited')->name('visited.create');
-    Route::delete('/users/{user_id}/visited/{world_id}', 'delete_visited')->name('visited.delete');
+    Route::post('/users/{user_id}/visited/{world_id}', 'toggle_visited')->name('visited.toggle');
+    // Route::delete('/users/{user_id}/visited/{world_id}', 'delete_visited')->name('visited.delete');
 });
 
 // 口コミ関係のルーティング
