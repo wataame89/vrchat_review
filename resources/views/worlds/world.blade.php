@@ -8,6 +8,7 @@
         <div class=''>{{ $world->capacity }}</div>
         <div class=''>{{ $world->created_at }}</div>
         <div class=''>{{ $world->updated_at }}</div>
+
         @if ($reviews)
             @foreach ($reviews as $review)
                 <div class=''>
