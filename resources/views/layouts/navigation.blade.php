@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-gray-800 border-b border-gray-500">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -6,8 +6,9 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="h-9 w-auto fill-current text-white inline-block" />
                     </a>
+                    <a href="{{ route('home') }}" class="pt-1 pl-2 text-xl font-medium text-white">VRChat Review</a>
                 </div>
 
                 <!-- Navigation Links -->
@@ -16,8 +17,47 @@
                         {{ __('Dashboard') }}
                     </x-nav-link> --}}
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                        {{ __('Home') }}
+                        <div class="text-white">
+                            {{ __('Home') }}
+                        </div>
                     </x-nav-link>
+
+                    @if (Auth::user())
+                        <x-nav-link :href="route('userpage', ['user_id' => Auth::user()->id])" :active="request()->routeIs('userpage', ['user_id' => Auth::user()->id])">
+                            <div class="text-white">
+                                {{ __('MyPage') }}
+                            </div>
+                        </x-nav-link>
+                    @endif
+
+                    <div class = "inline-flex items-center px-5 text-sm font-medium text-white mr-0">
+                        <form action="/worlds/search" method="POST">
+                            @csrf
+                            <span class ="text-base">
+                                Search
+                            </span>
+                            <input class = "text-gray-600" type="text" name="search[keyword]"
+                                placeholder="world name" value="" />
+                            <span class ="pl-2 text-base">
+                                Sort
+                            </span>
+                            <select name="search[sort]" class="cursor-pointer text-gray-600">
+                                <option value="popularity">popularity</option>
+                                {{-- <option value="_created_at">_created_at</option>
+                                        <option value="_updated_at">_updated_at</option> --}}
+                                <option value="favorites">favorites</option>
+                                <option value="heat">heat</option>
+                                <option value="trust">trust</option>
+                            </select>
+                            <label for="switch" class ="pl-2 cursor-pointer">
+                                <input type="checkbox" id="switch" name="sortByReview" value="on" />
+                                口コミ優先
+                            </label><span class ="pl-2 text-gray-600">
+                                <input type="submit" value="検索"
+                                    class = "inline-block h-10 px-4 items-center justify-center rounded-md border border-gray-200 bg-white hover:bg-gray-100 cursor-pointer active:bg-gray-300 focus:outline-none" />
+                            </span>
+                        </form>
+                    </div>
                 </div>
             </div>
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('visited_worlds', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('user_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('world_id');
         });
     }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('body',200);
             $table->integer('rank');
             $table->string('world_id');
-            $table->integer('user_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('liked')->default(0);
             $table->integer('disliked')->default(0);
             $table->integer('reported')->default(0);
