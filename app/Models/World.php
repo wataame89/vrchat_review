@@ -10,7 +10,7 @@ class World extends Model
     use HasFactory;
 
     //post_likesテーブルへのリレーションメソッド。Postモデルのインスタンス＄postに、$post->likes->count()とすると記事のいいね数を取得できるようになった。
-    public function favoriteWorlds($world_id)
+    public function getFavoriteWorlds($world_id)
     {
         $favorited_worlds = Favorite_world::where('world_id', $world_id)->get();
         return $favorited_worlds;
@@ -25,7 +25,7 @@ class World extends Model
         $likersArr = array();
 
         //$thisは言葉の似た通り、クラス自身を指す。具体的にはこのPostクラスをインスタンス化した際の変数のことを指す。（後続のビューで登場する$postになります）
-        foreach ($this->favoriteWorlds($world_id) as $favoriteWorld) {
+        foreach ($this->getFavoriteWorlds($world_id) as $favoriteWorld) {
             //array_pushメソッドで第一引数に配列、第二引数に配列に格納するデータを定義し、配列を作成できる。
             //今回は$likersArrという空の配列にいいねをした全てのユーザーのidを格納している。
             array_push($likersArr, $favoriteWorld->user_id);
@@ -40,10 +40,10 @@ class World extends Model
         }
     }
     //post_likesテーブルへのリレーションメソッド。Postモデルのインスタンス＄postに、$post->likes->count()とすると記事のいいね数を取得できるようになった。
-    public function visitedWorlds($world_id)
+    public function getVisitedWorlds($world_id)
     {
-        $visitedd_worlds = Visited_world::where('world_id', $world_id)->get();
-        return $visitedd_worlds;
+        $visited_worlds = Visited_world::where('world_id', $world_id)->get();
+        return $visited_worlds;
     }
     //自身がいいねしているのかどうか判定するメソッド（しているならtrue,していないならfalseを返す）
     public function isVisitedByAuthUser($world_id): bool
@@ -55,7 +55,7 @@ class World extends Model
         $likersArr = array();
 
         //$thisは言葉の似た通り、クラス自身を指す。具体的にはこのPostクラスをインスタンス化した際の変数のことを指す。（後続のビューで登場する$postになります）
-        foreach ($this->visitedWorlds($world_id) as $visitedWorld) {
+        foreach ($this->getVisitedWorlds($world_id) as $visitedWorld) {
             //array_pushメソッドで第一引数に配列、第二引数に配列に格納するデータを定義し、配列を作成できる。
             //今回は$likersArrという空の配列にいいねをした全てのユーザーのidを格納している。
             array_push($likersArr, $visitedWorld->user_id);

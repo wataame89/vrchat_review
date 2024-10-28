@@ -18,7 +18,7 @@ use App\Models\World;
 
 class UserController extends Controller
 {
-    public function userpage($user_id, World $virtualWorld)
+    public function userpage($user_id, Review $review, World $virtualWorld)
     {
         $user = $this->getUser('id', $user_id);
         $favorite_worlds = $this->getFavoriteWorlds($user_id);
@@ -31,7 +31,8 @@ class UserController extends Controller
             'user' => $user,
             'favorite_worlds' => $favorite_worlds,
             'visited_worlds' => $visited_worlds,
-            'virtualWorld' => $virtualWorld
+            'virtualWorld' => $virtualWorld,
+            'review' => $review
         ]);
     }
 
@@ -96,8 +97,9 @@ class UserController extends Controller
         try {
             $world_ids = Favorite_world::where(column: "user_id", operator: $user_id)->get();
             $worlds = [];
+            $client = new Client();
             foreach ($world_ids as $world_id) {
-                array_push($worlds, $this->getWorldByID($world_id->world_id));
+                array_push($worlds, $this->getWorldByID($world_id->world_id, $client));
             }
         } catch (ModelNotFoundException $e) {
             return null;
@@ -110,8 +112,9 @@ class UserController extends Controller
         try {
             $world_ids = Visited_world::where(column: "user_id", operator: $user_id)->get();
             $worlds = [];
+            $client = new Client();
             foreach ($world_ids as $world_id) {
-                array_push($worlds, $this->getWorldByID($world_id->world_id));
+                array_push($worlds, $this->getWorldByID($world_id->world_id, $client));
             }
         } catch (ModelNotFoundException $e) {
             return null;
@@ -119,7 +122,7 @@ class UserController extends Controller
         return $worlds;
     }
 
-    private function getWorldByID($world_id)
+    private function getWorldByID($world_id, $client)
     {
         $cookieJar = CookieJar::fromArray([
             'auth' => Cache::get('authcookieJar')->toArray()[0]["Value"]
@@ -127,7 +130,9 @@ class UserController extends Controller
 
         $url = 'https://api.vrchat.com/api/1/worlds/' . $world_id;
 
-        $client = new Client();
+        if (!$client) {
+            $client = new Client();
+        }
 
         try {
             $response = $client->request('GET', $url, [

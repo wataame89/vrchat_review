@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <body>
-        <div>検索キーワード：{{ $search['keyword'] }}</div>
+        <div class="font-bold">検索キーワード：{{ $search['keyword'] }}</div>
 
         <main>
             <div class="flex flex-wrap justify-center">
