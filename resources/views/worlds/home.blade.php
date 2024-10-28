@@ -5,14 +5,14 @@
             {{-- <div class="bg-orange-100">
                 <a class="my-navbar-brand" href="/">VRChat Review</a>
             </div> --}}
-            <div class="container">
-                <div class="row">
-                    <div class="column col-md-8">
-                        <!-- ここにタスクが表示される -->
+            <div class="">
+                <div class="">
+                    <div class="">
                     </div>{{ $status }}
                 </div>
                 <a href="/auth_2FA">二段階認証</a>
-                {{-- <a href="/auth_2FA_first">メール送信</a>
+            </div>
+            {{-- <a href="/auth_2FA_first">メール送信</a>
                 <form action="/auth_2FA_second" method="POST">
                     @csrf
                     <div class="code">
@@ -22,12 +22,12 @@
                     <input type="submit" value="送信" />
                 </form> --}}
 
-
-            </div>
-            <div>
-                <h2>おすすめワールド</h2>
-            </div>
-            </div>
+            <div class="text-center text-2xl font-bold m-16">VRChat Reviewは口コミ特化型ワールド検索サイトです!</div>
+            <div class="text-center text-2xl font-bold m-4">おすすめワールド</div>
+            <div class="flex flex-wrap justify-center">
+                @foreach ($worlds as $world)
+                    @include('layouts.world_template')
+                @endforeach
             </div>
         </main>
     </body>

@@ -1,6 +1,7 @@
 import './bootstrap';
 import "./favorite";
 import "./visited";
+import "./review";
 
 import Alpine from 'alpinejs';
 

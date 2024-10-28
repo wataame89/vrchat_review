@@ -12,6 +12,7 @@ use Cache;
 
 use App\Models\Review;
 use App\Models\World;
+use App\Models\User;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -19,11 +20,12 @@ use Illuminate\Support\Collection;
 
 class WorldController extends Controller
 {
-    public function home()
+    public function home(Review $review, World $virtualWorld)
     {
         // Set the query parameters
         $queryParams = [
-            'n' => '1',
+            'n' => '8',
+            'sort' => 'random',
         ];
         // dump(Cache::get('authcookieJar'));
         // dump(Cache::get('authcookieJar')->toArray());
@@ -35,34 +37,13 @@ class WorldController extends Controller
         } else {
             $status = 'Status: VRChat not authorized';
         }
-        return view('worlds/home')->with('status', $status);
+        return view('worlds/home')->with([
+            'worlds' => $worlds,
+            'status' => $status,
+            'virtualWorld' => $virtualWorld,
+            'review' => $review
+        ]);
     }
-
-
-    // public function worlds()
-    // {
-    //     // Set the query parameters
-    //     $queryParams = [
-    //         'featured' => 'false',
-    //         'sort' => 'popularity',
-    //         // 'userId' => '',
-    //         'order' => 'ascending',
-    //         // 'search' => '',
-    //         // 'tag' => '',
-    //         // 'notag' => '',
-    //         'n' => '3',
-    //     ];
-
-    //     $worlds = $this->searchWorlds($queryParams);
-
-    //     dump($worlds);
-
-
-
-    //     return view('worlds/worlds')->with([
-    //         'worlds' => $worlds
-    //     ]);
-    // }
 
     public function search(Request $request, Review $review)
     {
@@ -84,6 +65,14 @@ class WorldController extends Controller
         ];
 
         $worlds = $this->searchWorlds($queryParams);
+        if ($sortByReview) {
+            $reviewCounts = array();
+            foreach ($worlds as $world) {
+                array_push($reviewCounts, $review->getWorldReviews($world->id)->count());
+            }
+            array_multisort($reviewCounts, SORT_DESC, $worlds);
+        }
+
         // dump($worlds);
         session(['worlds' => $worlds]);
         // jsonエンコードにより、object形式を保つ
@@ -101,9 +90,12 @@ class WorldController extends Controller
         $search = $request['search'];
         $search['keyword'] = !empty($search['keyword']) ? $search['keyword'] : "";
         $sortByReview = $request['sortByReview'];
-        // dump($worlds);
+        dump($worlds);
         // \Debugbar::addMessage($request['worlds']);
         // \Debugbar::addMessage($search);
+        foreach ($worlds as $world) {
+            $world->reviewcount = Review::where("world_id", $world->id)->get()->count();
+        }
 
         // ページネート
         $perPage = 12;  // 1ページあたりの件数
@@ -117,23 +109,28 @@ class WorldController extends Controller
             'worlds' => $paginatedWorlds,
             'search' => $search,
             'sortByReview' => $sortByReview,
-            'virtualWorld' => $virtualWorld
+            'virtualWorld' => $virtualWorld,
+            'review' => $review
         ]);
     }
 
-    public function world($world_id, World $virtualWorld)
+    public function world($world_id, Review $review, World $virtualWorld)
     {
         $world = $this->getWorldByID($world_id);
         // レビュー情報の取得
         $reviews = $this->getReviews("world_id", $world_id);
 
-        dump($world);
-        dump($reviews);
+        foreach ($reviews as $review) {
+            $review["username"] = User::where('id', $review["user_id"])->first()["name"];
+        }
+        // dump($world);
+        // dump($reviews);
 
         return view('worlds/world')->with([
             'world' => $world,
             'reviews' => $reviews,
-            'virtualWorld' => $virtualWorld
+            'virtualWorld' => $virtualWorld,
+            'review' => $review
         ]);
     }
 
