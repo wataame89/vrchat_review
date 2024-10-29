@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Exception;
+
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -27,13 +27,13 @@ class UserController extends Controller
         // dump($favorite_worlds);
         // dump($visited_worlds);
 
-        return view('users/userpage')->with([
-            'user' => $user,
-            'favorite_worlds' => $favorite_worlds,
-            'visited_worlds' => $visited_worlds,
-            'virtualWorld' => $virtualWorld,
-            'review' => $review
-        ]);
+        return view('users/userpage', compact(
+            'user',
+            'favorite_worlds',
+            'visited_worlds',
+            'virtualWorld',
+            'review'
+        ));
     }
 
     public function toggle_favorite($user_id, $world_id, Favorite_world $favorite_world)
