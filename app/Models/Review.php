@@ -12,6 +12,7 @@ class Review extends Model
         'title',
         'body',
         'rank',
+        'image_url',
         'user_id',
         'world_id',
     ];

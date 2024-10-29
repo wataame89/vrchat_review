@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Review;
-use App\Models\World;
 use Illuminate\Http\Request;
+use App\Http\Requests\ReviewRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Cache;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
+use Cache;
 
+use App\Models\Review;
+use App\Models\World;
+
+use Cloudinary;
 class ReviewController extends Controller
 {
     // public function show()
@@ -21,40 +24,53 @@ class ReviewController extends Controller
     public function create($world_id, Review $review, World $virtualWorld)
     {
         $world = $this->getWorldByID($world_id);
-        return view('reviews/create')->with([
-            'virtualWorld' => $virtualWorld,
-            'world' => $world,
-            'review' => $review
-        ]);
+        return view('reviews/create', compact(
+            'virtualWorld',
+            'world',
+            'review'
+        ));
     }
 
-    public function store(Request $request, Review $review)
+    public function store(ReviewRequest $request, Review $review)
     {
         $input = $request['review'];
+        if ($request->file('image')) {
+            \Debugbar::addMessage($request->file('image'));
+            $image_url = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+            $input += ['image_url' => $image_url];
+        }
         // dump($input);
         $review->fill($input)->save();
         return redirect('/worlds/' . $input['world_id']);
     }
 
-    public function edit($world_id, $review_id)
+    public function edit($world_id, $review_id, World $virtualWorld)
     {
         $review = Review::where('id', $review_id)->first();
-        return view('reviews/edit')->with([
-            'world_id' => $world_id,
-            'review' => $review
-        ]);
+        $world = $this->getWorldByID($world_id);
+        return view('reviews/edit', compact(
+            'virtualWorld',
+            'world_id',
+            'world',
+            'review'
+        ));
     }
 
-    public function update($review_id, Request $request)
+    public function update($review_id, ReviewRequest $request)
     {
         $review = Review::where('id', $review_id)->first();
         $input = $request['review'];
         // dump($input);
+        if ($request->file('image')) {
+            \Debugbar::addMessage($request->file('image'));
+            $image_url = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+            $input['image_url'] = $image_url;
+        }
         $review->fill($input)->save();
         return redirect('/worlds/' . $input['world_id']);
     }
 
-    public function delete($review_id, Request $request)
+    public function delete($review_id, ReviewRequest $request)
     {
         $review = Review::where('id', $review_id)->first();
         $review->delete();

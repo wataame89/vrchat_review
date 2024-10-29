@@ -6,9 +6,11 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
-                        <x-application-logo class="h-9 w-auto fill-current text-white inline-block" />
+                        {{-- <x-application-logo class="h-9 w-auto fill-current text-white inline-block" /> --}}
+                        <i
+                            class="fa-regular fa-comment-dots text-3xl w-auto fill-current inline-block text-white mt-0.5"></i>
                     </a>
-                    <a href="{{ route('home') }}" class="pt-1 pl-2 text-xl font-medium text-white">VRChat Review</a>
+                    <a href="{{ route('home') }}" class="m-2 text-xl font-medium text-white">VRChat Review</a>
                 </div>
 
                 <!-- Navigation Links -->

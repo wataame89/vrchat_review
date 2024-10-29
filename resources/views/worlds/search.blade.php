@@ -6,7 +6,7 @@
         <main>
             <div class="flex flex-wrap justify-center">
                 @foreach ($worlds as $world)
-                    @include('layouts.world_template')
+                    @include('layouts.world-card')
                 @endforeach
             </div>
             {{ $worlds->appends([

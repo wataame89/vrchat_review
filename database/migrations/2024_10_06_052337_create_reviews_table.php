@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,9 +13,10 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('title',20);
-            $table->string('body',200);
+            $table->string('title', 30);
+            $table->string('body', 300);
             $table->integer('rank');
+            $table->string('image_url')->nullable();
             $table->string('world_id');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('liked')->default(0);
