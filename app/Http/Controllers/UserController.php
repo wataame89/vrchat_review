@@ -31,7 +31,7 @@ class UserController extends Controller
             $review["username"] = User::where('id', $review["user_id"])->first()["name"];
         }
 
-        \Debugbar::addMessage($reviews);
+        // \Debugbar::addMessage($reviews);
         // dump($user_id);
         // dump($favorite_worlds);
         // dump($visited_worlds);
