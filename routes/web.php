@@ -21,8 +21,8 @@ use App\Http\Controllers\ReviewController;
 // VRChat関係のルーティング
 Route::controller(VRChatController::class)->group(function () {
     Route::get('/auth_2FA', 'auth_2FA')->name('auth_2FA');
-    // Route::get('/auth_2FA_first', 'auth_2FA_first')->name('auth_2FA_first');
-    // Route::post('/auth_2FA_second', 'auth_2FA_second')->name('auth_2FA_second');
+    Route::get('/auth_2FA_first', 'auth_2FA_first')->name('auth_2FA_first');
+    Route::get('/auth_2FA_second/{passcode}', 'auth_2FA_second')->name('auth_2FA_second');
     // Route::get('/getOneTimeCode', 'getOneTimeCode')->name('getOneTimeCode');
 });
 

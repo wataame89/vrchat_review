@@ -36,4 +36,16 @@ return [
         'password' => env('VRCHAT_PASSWORD'),
         'apikey' => env('VRCHAT_API_KEY', 'us-east-1'),
     ],
+
+    'gmailapi' => [
+        'client_id' => env('CLIENT_ID'),
+        'project_id' => env('PROJECT_ID'),
+        'auth_uri' => env('AUTH_URI'),
+        'token_uri' => env('TOKEN_URI'),
+        'auth_provider_x509_cert_url' => env('AUTH_PROVIDER_X509_CERT_URL'),
+        'client_secret' => env('CLIENT_SECRET'),
+        'redirect_uris' => [
+            env('REDIRECT_URIS')
+        ],
+    ],
 ];

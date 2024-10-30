@@ -55,10 +55,11 @@ class VRChatController extends Controller
         return $response->getBody();
     }
 
-    public function auth_2FA_second(Request $request)
+    public function auth_2FA_second($passcode)
     {
         // $authcode = $request['post'];
-        echo $authcode = $this->getOneTimeCode();
+        // echo $authcode = $this->getOneTimeCode();
+        echo $authcode = $passcode;
         $cookieJar = Cache::get('authcookieJar');
 
         $url = 'https://api.vrchat.cloud/api/1/auth/twofactorauth/emailotp/verify';
