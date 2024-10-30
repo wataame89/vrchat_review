@@ -11,6 +11,11 @@ use Cache;
 
 class VRChatController extends Controller
 {
+    public function test()
+    {
+        return view('vrchat/2fa');
+    }
+
     public function auth_2FA()
     {
         echo $response1 = $this->auth_2FA_first();
