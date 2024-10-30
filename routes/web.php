@@ -38,7 +38,7 @@ Route::controller(WorldController::class)->group(function () {
 // ユーザー関係のルーティング
 Route::controller(UserController::class)->group(function () {
     // ユーザーページ表示
-    Route::get('/users/{user_id}', 'userpage')->name('userpage');
+    Route::get('/users/{user_name}', 'userpage')->name('userpage');
 });
 
 Route::controller(UserController::class)->middleware(['auth'])->group(function () {

@@ -4,8 +4,7 @@
     </span>
     <span class="relative inline-block h-8" style="width:120px">
     </span>
-    <span class="absolute inline-block h-8 overflow-hidden text-orange-300"
-        style="width:{{ $review->getAverageRank($world->id) * 24 }}px">
+    <span class="absolute inline-block h-8 overflow-hidden text-orange-300" style="width:{{ $rank_number * 24 }}px">
         ★★★★★
     </span>
 </div>

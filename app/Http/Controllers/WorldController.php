@@ -20,8 +20,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class WorldController extends Controller
 {
-    public function home(Review $review, World $virtualWorld)
+    public function home()
     {
+        $world_model = new World();
+        $review_model = new Review();
         // Set the query parameters
         $queryParams = [
             'n' => '8',
@@ -40,13 +42,14 @@ class WorldController extends Controller
         return view('worlds/home', compact(
             'worlds',
             'status',
-            'virtualWorld',
-            'review'
+            'world_model',
+            'review_model',
         ));
     }
 
-    public function search(Request $request, Review $review)
+    public function search(Request $request)
     {
+        $review_model = new Review();
         $search = $request['search'];
         $sortByReview = $request['sortByReview'];
 
@@ -61,7 +64,7 @@ class WorldController extends Controller
             'search' => $search['keyword'],
             // 'tag' => '',
             // 'notag' => '',
-            'n' => '15',
+            'n' => '36',
             // 'offset' => '999'
         ];
 
@@ -69,7 +72,7 @@ class WorldController extends Controller
         if ($sortByReview) {
             $reviewCounts = array();
             foreach ($worlds as $world) {
-                array_push($reviewCounts, $review->getWorldReviews($world->id)->count());
+                array_push($reviewCounts, $review_model->getWorldReviews($world->id)->count());
             }
             array_multisort($reviewCounts, SORT_DESC, $worlds);
         }
@@ -83,8 +86,10 @@ class WorldController extends Controller
         ]);
     }
 
-    public function index(Request $request, Review $review, World $virtualWorld)
+    public function index(Request $request)
     {
+        $world_model = new World();
+        $review_model = new Review();
         // $worlds = json_decode($request['worlds'], false);
         $worlds = session('worlds');
         $search = $request['search'];
@@ -110,13 +115,15 @@ class WorldController extends Controller
             'worlds',
             'search',
             'sortByReview',
-            'virtualWorld',
-            'review'
+            'world_model',
+            'review_model'
         ));
     }
 
-    public function world($world_id, Review $review, World $virtualWorld)
+    public function world($world_id)
     {
+        $world_model = new World();
+        $review_model = new Review();
         $world = $this->getWorldByID($world_id);
         // レビュー情報の取得
         $reviews = $this->getReviews("world_id", $world_id);
@@ -130,8 +137,8 @@ class WorldController extends Controller
         return view('worlds/world', compact(
             'world',
             'reviews',
-            'virtualWorld',
-            'review'
+            'world_model',
+            'review_model'
         ));
     }
 

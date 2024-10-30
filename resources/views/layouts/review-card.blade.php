@@ -1,6 +1,8 @@
 <div class="flex flex-col relative p-2 w-80 min-h-60 rounded overflow-hidden shadow-lg m-2 bg-white">
     <div class="flex m-2">
-        <div class="font-bold text-base mx-0.5">{{ $review->username }}</div>
+        <a href="/users/{{ $review->username }}">
+            <div class="font-bold text-base mx-0.5">{{ $review->username }}</div>
+        </a>
 
         <div class="absolute right-0 top-0 m-2" x-data="{ open: false }">
             <!-- 三点リーダーのアイコン -->
@@ -17,7 +19,7 @@
                 <a href="/reviews/{{ $world->id }}/{{ $review->id }}/edit"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
                 <form action="/reviews/{{ $review->id }}" id="form_{{ $review->id }}"
-                    method="post"class="block px-4 py-2 m-0 text-sm text-gray-700 hover:bg-gray-100">
+                    method="POST"class="block px-4 py-2 m-0 text-sm text-gray-700 hover:bg-gray-100">
                     @csrf
                     @method('DELETE')
                     <input type="hidden" name="world_id" value="{{ $world->id }}">
@@ -27,8 +29,11 @@
             </div>
         </div>
     </div>
+    <div class="flex">
+        @include('layouts.rank-star', ['rank_number' => $review->rank])
+        <div class='ml-2 text-sm flex items-center'>{{ substr($review->updated_at, 0, 10) }}</div>
+    </div>
     <div class="font-bold underline text-xl m-2">{{ $review->title }}</div>
-    @include('layouts.rank-star')
     <div class='m-2 whitespace-break-spaces'>{{ $review->body }}</div>
     @if ($review->image_url)
         <div class='flex-1 m-2 grid h-full place-content-end'>

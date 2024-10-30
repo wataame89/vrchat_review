@@ -16,5 +16,14 @@
                 @include('layouts.world-card')
             @endforeach
         </div>
+
+        <div class="text-center text-2xl font-bold m-4">Review</div>
+        <div class="flex flex-wrap justify-center">
+            @if ($reviews)
+                @foreach ($reviews as $review)
+                    @include('layouts.review-card')
+                @endforeach
+            @endif
+        </div>
     </body>
 </x-app-layout>
