@@ -18,11 +18,20 @@ use App\Models\World;
 
 class UserController extends Controller
 {
-    public function userpage($user_id, Review $review, World $virtualWorld)
+    public function userpage($user_name)
     {
+        $user_id = User::where("name", $user_name)->first()->id;
+        $review_model = new Review();
+        $world_model = new World();
         $user = $this->getUser('id', $user_id);
         $favorite_worlds = $this->getFavoriteWorlds($user_id);
         $visited_worlds = $this->getVisitedWorlds($user_id);
+        $reviews = Review::where('user_id', $user_id)->get();
+        foreach ($reviews as $review) {
+            $review["username"] = User::where('id', $review["user_id"])->first()["name"];
+        }
+
+        \Debugbar::addMessage($reviews);
         // dump($user_id);
         // dump($favorite_worlds);
         // dump($visited_worlds);
@@ -31,17 +40,19 @@ class UserController extends Controller
             'user',
             'favorite_worlds',
             'visited_worlds',
-            'virtualWorld',
-            'review'
+            'world_model',
+            'reviews',
+            'review_model'
         ));
     }
 
-    public function toggle_favorite($user_id, $world_id, Favorite_world $favorite_world)
+    public function toggle_favorite($user_id, $world_id)
     {
+        $favorite_world_model = new Favorite_world();
         $isAlreadlFavorited = Favorite_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->exists();
 
         if (!$isAlreadlFavorited) {
-            $favorite_world->fill([
+            $favorite_world_model->fill([
                 'user_id' => $user_id,
                 'world_id' => $world_id
             ])->save();
@@ -59,12 +70,13 @@ class UserController extends Controller
         return response()->json($param);
     }
 
-    public function toggle_visited($user_id, $world_id, Visited_world $visited_world)
+    public function toggle_visited($user_id, $world_id)
     {
+        $visited_world_model = new Visited_world();
         $isAlreadlVisited = Visited_world::where(column: "user_id", operator: $user_id)->where(column: "world_id", operator: $world_id)->exists();
 
         if (!$isAlreadlVisited) {
-            $visited_world->fill([
+            $visited_world_model->fill([
                 'user_id' => $user_id,
                 'world_id' => $world_id
             ])->save();

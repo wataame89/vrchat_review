@@ -1,5 +1,4 @@
 <x-app-layout>
-    <title>Code Kitchen（コードキッチン）</title>
 
     <body>
         <main>

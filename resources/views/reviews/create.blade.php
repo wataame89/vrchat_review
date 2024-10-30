@@ -2,7 +2,7 @@
 
     <body>
         <div class="flex justify-center">
-            <div class=" m-4 w-1/3 rounded bg-white text-gray-700">
+            <div class=" m-4 w-1/3 min-w-96 rounded bg-white text-gray-700">
                 <a href="/worlds/{{ $world->id }}">
                     <img class="w-full" src="{{ $world->imageUrl }}" alt="{{ $world->name }}">
                     <div class="font-bold text-2xl m-2 text-center">{{ $world->name }}</div>
@@ -90,8 +90,10 @@
 
 <script>
     document.querySelectorAll('input[name="review[rank]"]').forEach((radio) => {
+        console.log(radio);
         radio.addEventListener('change', (event) => {
             const selectedRating = event.target.value;
+            console.log(event);
             document.querySelectorAll('i[data-rating]').forEach((star) => {
                 star.classList.toggle('text-yellow-500', star.getAttribute('data-rating') <=
                     selectedRating);

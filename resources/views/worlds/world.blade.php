@@ -11,9 +11,11 @@
             <div class="flex ml-2">
                 <div class="text-gray-700 text-2xl m-1">
                     <div class="flex">
-                        @include('layouts.rank-star')
+                        @include('layouts.rank-star', [
+                            'rank_number' => $review_model->getAverageRank($world->id),
+                        ])
                         <div class="text-2xl m-1">
-                            {{ $review->getAverageRank($world->id) }}
+                            {{ $review_model->getAverageRank($world->id) }}
                         </div>
                     </div>
                     <div class="text-xl ml-2">
@@ -80,15 +82,8 @@
                 </a>
             </div>
         </div>
+
+        @include('layouts.review-create-popup')
     </body>
 
-    <script>
-        function deletePost(id) {
-            'use strict'
-
-            if (confirm('削除すると復元できません。\n本当に削除しますか？')) {
-                document.getElementById(`form_${id}`).submit();
-            }
-        }
-    </script>
 </x-app-layout>

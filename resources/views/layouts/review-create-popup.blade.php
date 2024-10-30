@@ -1,12 +1,14 @@
-<x-app-layout>
-
-    <body>
-        <div class="flex justify-center">
-            <div class=" m-4 w-1/3 min-w-96 rounded bg-white text-gray-700">
-                <a href="/worlds/{{ $world->id }}">
+<div class="hidden">
+    @auth
+        <div class="flex justify-center bg-gray-900 bg-opacity-50 pb-96" id = "review_form_{{ $world->id }}">
+            <div class="relative m-4 w-1/3 min-w-96 rounded-lg bg-white text-gray-700 overflow-hidden">
+                <div>
+                    <button onclick="closePopup()" class="absolute right-0 top-0 px-0.5 m-2 text-4xl text-gray-300">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                     <img class="w-full" src="{{ $world->imageUrl }}" alt="{{ $world->name }}">
-                    <div class="font-bold text-2xl m-2 text-center">{{ $world->name }}</div>
-                </a>
+                    <div class="font-bold m-2 text-center">{{ $world->name }}</div>
+                </div>
 
                 <div class="px-6 pt-4 pb-2 text-center ">
                     @foreach ($world->tags as $tag)
@@ -19,19 +21,18 @@
                     @endforeach
                 </div>
 
-                <form action="/reviews/{{ $review->id }}" method="POST" enctype="multipart/form-data" class="m-8">
+                <form action="/reviews" method="POST" enctype="multipart/form-data" class="m-8">
                     @csrf
-                    @method('PUT')
                     <div class="">
                         <div class="font-bold text-xl my-2">口コミ</div>
                         <div class="font-bold text-xl">タイトル</div>
-                        <input type="text" name="review[title]" placeholder="タイトル" value="{{ $review->title }}"
+                        <input type="text" name="review[title]" placeholder="タイトル" value="{{ old('review.title') }}"
                             class="w-full" />
                         <div class="" style="color:red">{{ $errors->first('review.title') }}</div>
                     </div>
                     <div class="">
                         <div class="font-bold text-xl my-2">評価</div>
-                        <div class="my-2">
+                        <div class="my-2"">
                             <label>
                                 <input type="radio" name="review[rank]" value="1" class="hidden">
                                 <i class="fa-solid fa-star text-2xl w-8 h-8 cursor-pointer fill-current text-gray-400"
@@ -68,11 +69,8 @@
 
                     <div class="">
                         <div class="font-bold text-xl my-2">本文</div>
-                        <textarea name="review[body]" placeholder="ワールドについて" class="w-full min-h-40">{{ $review->body }}</textarea>
+                        <textarea name="review[body]" placeholder="ワールドについて" class="w-full min-h-40">{{ old('review.body') }}</textarea>
                         <div class="" style="color:red">{{ $errors->first('review.body') }}</div>
-                    </div>
-                    <div class='m-2'>
-                        <img src="{{ $review->image_url }}" alt="画像が読み込めません。">
                     </div>
                     <div class="">
                         <div class="font-bold text-xl my-2">添付画像</div>
@@ -83,25 +81,13 @@
                     <div class="flex justify-center">
                         <input type="submit" value="投稿"
                             class="inline-block py-2 px-32 m-4 items-center justify-center align-middle font-bold text-lg
-                                rounded-md border-2 border-gray-300 bg-gray-50 
-                                hover:bg-gray-200 active:bg-gray-300 cursor-pointer focus:outline-none" />
+                                    rounded-md border-2 border-gray-300 bg-gray-50 
+                                    hover:bg-gray-200 active:bg-gray-300 cursor-pointer focus:outline-none" />
                     </div>
                 </form>
             </div>
         </div>
-    </body>
-</x-app-layout>
+        @endif
+    </div>
 
-<script>
-    document.querySelectorAll('input[name="review[rank]"]').forEach((radio) => {
-        radio.addEventListener('change', (event) => {
-            const selectedRating = event.target.value;
-            document.querySelectorAll('i[data-rating]').forEach((star) => {
-                star.classList.toggle('text-yellow-500', star.getAttribute('data-rating') <=
-                    selectedRating);
-                star.classList.toggle('text-gray-400', star.getAttribute('data-rating') >
-                    selectedRating);
-            });
-        });
-    });
-</script>
+    <script></script>

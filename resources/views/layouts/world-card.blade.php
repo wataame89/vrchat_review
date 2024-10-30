@@ -1,18 +1,17 @@
 <div class="text-center w-80 rounded overflow-hidden shadow-lg m-2 bg-gray-100">
     <a href="/worlds/{{ $world->id }}">
-        <img class="w-full" src="{{ $world->imageUrl }}" alt="{{ $world->name }}">
+        <div class="w-80 h-60 bg-black">
+            <img class="object-cover" src="{{ $world->imageUrl }}" alt="{{ $world->name }}">
+        </div>
         <div class="font-bold text-xl m-2">{{ $world->name }}</div>
-        {{-- <div class="text-gray-700 text-sm">
-                author : {{ $world->authorName }}
-            </div> --}}
     </a>
     <div class="text-gray-700 text-base m-1">
         In VRChat 🧡{{ $world->favorites }}
     </div>
     <div class="flex justify-center">
-        @include('layouts.rank-star')
+        @include('layouts.rank-star', ['rank_number' => $review_model->getAverageRank($world->id)])
         <div class="text-2xl m-1">
-            {{ $review->getAverageRank($world->id) }}
+            {{ $review_model->getAverageRank($world->id) }}
         </div>
     </div>
     <div class="mt-4">
@@ -30,3 +29,5 @@
         @endforeach
     </div>
 </div>
+
+@include('layouts.review-create-popup')

@@ -21,18 +21,22 @@ class ReviewController extends Controller
     //     return view('review/show');
     // }
 
-    public function create($world_id, Review $review, World $virtualWorld)
+    public function create($world_id)
     {
+        $world_model = new World();
+        $review_model = new Review();
+
         $world = $this->getWorldByID($world_id);
         return view('reviews/create', compact(
-            'virtualWorld',
+            'world_model',
             'world',
-            'review'
+            'review_model'
         ));
     }
 
-    public function store(ReviewRequest $request, Review $review)
+    public function store(ReviewRequest $request)
     {
+        $review_model = new Review();
         $input = $request['review'];
         if ($request->file('image')) {
             \Debugbar::addMessage($request->file('image'));
@@ -40,16 +44,17 @@ class ReviewController extends Controller
             $input += ['image_url' => $image_url];
         }
         // dump($input);
-        $review->fill($input)->save();
+        $review_model->fill($input)->save();
         return redirect('/worlds/' . $input['world_id']);
     }
 
-    public function edit($world_id, $review_id, World $virtualWorld)
+    public function edit($world_id, $review_id)
     {
+        $world_model = new World();
         $review = Review::where('id', $review_id)->first();
         $world = $this->getWorldByID($world_id);
         return view('reviews/edit', compact(
-            'virtualWorld',
+            'world_model',
             'world_id',
             'world',
             'review'
@@ -70,7 +75,7 @@ class ReviewController extends Controller
         return redirect('/worlds/' . $input['world_id']);
     }
 
-    public function delete($review_id, ReviewRequest $request)
+    public function delete($review_id, Request $request)
     {
         $review = Review::where('id', $review_id)->first();
         $review->delete();
