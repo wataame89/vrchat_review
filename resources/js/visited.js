@@ -8,14 +8,14 @@ likeBtns.forEach((likeBtn) => {
     //クリックされた要素にlikedというクラスがあれば削除し、なければ付与します。これにより星の色の切り替えができます。
     clickedEl.classList.toggle("text-blue-500");
     //記事のidを取得しています。
-    let isTurnedOn = clickedEl.classList.contains("text-blue-500");
+    const isTurnedOn = clickedEl.classList.contains("text-blue-500");
 
     if (isTurnedOn) {
       const reviewButton = likeBtn
         .closest(".text-center")
         .querySelector(".fa-comment");
       const reviewButtonDiv = reviewButton.closest(".m-0");
-      // console.log(likeBtn.closest(".text-center").querySelector(".fa-comment"));
+      console.log(likeBtn.closest(".text-center").querySelector(".fa-comment"));
       if (!reviewButton.classList.contains("text-green-500")) {
         reviewButtonDiv.classList.add("animate-bounce");
       }

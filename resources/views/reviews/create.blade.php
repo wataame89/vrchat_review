@@ -72,7 +72,7 @@
                     </div>
                     <div class="">
                         <div class="font-bold text-xl my-2">添付画像</div>
-                        <input type="file" name="image"class="inline-block mb-4 align-middle text-lg">
+                        <input type="file" name="image" class="inline-block mb-4 align-middle text-lg">
                     </div>
                     <input type="hidden" name="review[user_id]" value="{{ Auth::user()->id }}">
                     <input type="hidden" name="review[world_id]" value="{{ $world->id }}">

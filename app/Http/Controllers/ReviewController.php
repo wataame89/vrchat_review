@@ -39,7 +39,7 @@ class ReviewController extends Controller
         $review_model = new Review();
         $input = $request['review'];
         if ($request->file('image')) {
-            // \Debugbar::addMessage($request->file('image'));
+            \Debugbar::addMessage($request->file('image'));
             $image_url = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
             $input += ['image_url' => $image_url];
         }
