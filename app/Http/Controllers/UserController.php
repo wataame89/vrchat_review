@@ -24,8 +24,14 @@ class UserController extends Controller
         $review_model = new Review();
         $world_model = new World();
         $user = $this->getUser('id', $user_id);
-        $favorite_worlds = $this->getFavoriteWorlds($user_id);
         $visited_worlds = $this->getVisitedWorlds($user_id);
+        $favorite_worlds = array_udiff(
+            $this->getFavoriteWorlds($user_id),
+            $visited_worlds,
+            function ($a, $b) {
+                return $a->id <=> $b->id;
+            }
+        );
         $reviews = Review::where('user_id', $user_id)->get();
         foreach ($reviews as $review) {
             $review["username"] = User::where('id', $review["user_id"])->first()["name"];
