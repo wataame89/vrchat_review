@@ -13,6 +13,7 @@ class VRChatController extends Controller
 {
     public function test()
     {
+        dump(Cache::get('authcookieJar'));
         return view('vrchat/2fa');
     }
 
