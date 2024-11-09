@@ -1,1 +1,1 @@
-echo ${GOOGLE_CREDENTIALS} > /storage/app/gmailApi/credentials.json
+echo ${GOOGLE_CREDENTIALS} > /app/storage/app/gmailApi/credentials.json
