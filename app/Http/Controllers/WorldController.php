@@ -172,7 +172,7 @@ class WorldController extends Controller
                 'query' => $queryParams
             ]);
         } catch (Exception $e) {
-            dump($e);
+            // dump($e);
 
             // \Debugbar::addMessage($e);
             // \Debugbar::addMessage(Cache::get('authcookieJar')->toArray()[0]["Value"]);
@@ -202,7 +202,7 @@ class WorldController extends Controller
                 'cookies' => $cookieJar,
             ]);
         } catch (Exception $e) {
-            dump($e);
+            // dump($e);
             return null;
         }
 
@@ -223,7 +223,7 @@ class WorldController extends Controller
                 return $response->getHeaderLine('Location');
             }
         } catch (Exception $e) {
-            dump($e);
+            // dump($e);
             return null;
         }
         return $prevUrl;
