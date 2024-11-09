@@ -173,8 +173,8 @@ class WorldController extends Controller
         } catch (Exception $e) {
             dump($e);
 
-            \Debugbar::addMessage($e);
-            \Debugbar::addMessage(Cache::get('authcookieJar')->toArray()[0]["Value"]);
+            // \Debugbar::addMessage($e);
+            // \Debugbar::addMessage(Cache::get('authcookieJar')->toArray()[0]["Value"]);
             return null;
         }
 

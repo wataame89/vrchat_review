@@ -125,8 +125,8 @@ class VRChatController extends Controller
 
     private function getClient()
     {
-        $oauth_credential = Storage::path('gmailApi\credentials.json'); // oauthクライアントを作成してDLしたjsonのパス
-        $oauth_access_token = Storage::path('gmailApi\access_token.json'); // oauth認証後に取得するアクセストークンのパス
+        $oauth_credential = Storage::path('gmailApi/credentials.json'); // oauthクライアントを作成してDLしたjsonのパス
+        $oauth_access_token = Storage::path('gmailApi/access_token.json'); // oauth認証後に取得するアクセストークンのパス
 
         $client = new \Google\Client();
         $client->setApplicationName('Gmail API PHP Quickstart');
