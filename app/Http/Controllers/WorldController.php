@@ -33,7 +33,9 @@ class WorldController extends Controller
         // dump(Cache::get('authcookieJar')->toArray());
         $status = '';
         $worlds = $this->searchWorlds($queryParams);
-        // dump($worlds);
+        // \Debugbar::addMessage($worlds);
+        // \Debugbar::addMessage(Cache::get('authcookieJar'));
+        dump($worlds);
         if ($worlds) {
             $status = 'Status: VRChat authorized';
         } else {
@@ -131,7 +133,8 @@ class WorldController extends Controller
         foreach ($reviews as $review) {
             $review["username"] = User::where('id', $review["user_id"])->first()["name"];
         }
-        // dump($world);
+
+        dump($world);
         // dump($reviews);
 
         return view('worlds/world', compact(
@@ -152,13 +155,13 @@ class WorldController extends Controller
         return $reviews;
     }
 
-    private function searchWorlds($queryParams)
+    public static function searchWorlds($queryParams)
     {
         $cookieJar = CookieJar::fromArray([
             'auth' => Cache::get('authcookieJar')->toArray()[0]["Value"]
-        ], 'vrchat.com');
+        ], 'vrchat.cloud');
 
-        $url = 'https://api.vrchat.com/api/1/worlds';
+        $url = 'https://api.vrchat.cloud/api/1/worlds';
 
         $client = new Client();
 
@@ -169,14 +172,22 @@ class WorldController extends Controller
             ]);
         } catch (Exception $e) {
             dump($e);
+
+            \Debugbar::addMessage($e);
+            \Debugbar::addMessage(Cache::get('authcookieJar')->toArray()[0]["Value"]);
             return null;
         }
 
         $worlds = json_decode($response->getBody());
 
+        $client = new Client();
+        foreach ($worlds as $world) {
+            $world->imageUrl = WorldController::getRedirectUrl($client, $world->imageUrl);
+        }
+
         return $worlds;
     }
-    private function getWorldByID($world_id)
+    public static function getWorldByID($world_id)
     {
         $cookieJar = CookieJar::fromArray([
             'auth' => Cache::get('authcookieJar')->toArray()[0]["Value"]
@@ -197,7 +208,25 @@ class WorldController extends Controller
 
         $world = json_decode($response->getBody());
 
+        $client = new Client();
+        $world->imageUrl = WorldController::getRedirectUrl($client, $world->imageUrl);
+
         return $world;
+    }
+
+    public static function getRedirectUrl($client, $prevUrl)
+    {
+        try {
+            $response = $client->request('GET', $prevUrl, [
+                'allow_redirects' => false
+            ]);
+            if ($response->getStatusCode() >= 300 && $response->getStatusCode() < 400) {
+                return $response->getHeaderLine('Location');
+            }
+        } catch (Exception $e) {
+            dump($e);
+            return null;
+        }
     }
 
     function paginateArray(array $items, $perPage = 10, $page = null, $options = [])

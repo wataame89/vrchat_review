@@ -13,6 +13,8 @@ use Cache;
 use App\Models\Review;
 use App\Models\World;
 
+use App\Http\Controllers\WorldController;
+
 use Cloudinary;
 class ReviewController extends Controller
 {
@@ -26,7 +28,7 @@ class ReviewController extends Controller
         $world_model = new World();
         $review_model = new Review();
 
-        $world = $this->getWorldByID($world_id);
+        $world = WorldController::getWorldByID($world_id);
         return view('reviews/create', compact(
             'world_model',
             'world',
@@ -54,7 +56,7 @@ class ReviewController extends Controller
     {
         $world_model = new World();
         $review = Review::where('id', $review_id)->first();
-        $world = $this->getWorldByID($world_id);
+        $world = WorldController::getWorldByID($world_id);
         return view('reviews/edit', compact(
             'world_model',
             'world_id',
@@ -82,29 +84,5 @@ class ReviewController extends Controller
         $review = Review::where('id', $review_id)->first();
         $review->delete();
         return redirect('/worlds/' . $request['world_id']);
-    }
-
-    private function getWorldByID($world_id)
-    {
-        $cookieJar = CookieJar::fromArray([
-            'auth' => Cache::get('authcookieJar')->toArray()[0]["Value"]
-        ], 'vrchat.com');
-
-        $url = 'https://api.vrchat.com/api/1/worlds/' . $world_id;
-
-        $client = new Client();
-
-        try {
-            $response = $client->request('GET', $url, [
-                'cookies' => $cookieJar,
-            ]);
-        } catch (Exception $e) {
-            dump($e);
-            return null;
-        }
-
-        $world = json_decode($response->getBody());
-
-        return $world;
     }
 }

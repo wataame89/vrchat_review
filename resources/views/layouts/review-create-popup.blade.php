@@ -32,7 +32,7 @@
                     </div>
                     <div class="">
                         <div class="font-bold text-xl my-2">評価</div>
-                        <div class="my-2"">
+                        <div class="my-2">
                             <label>
                                 <input type="radio" name="review[rank]" value="1" class="hidden">
                                 <i class="fa-solid fa-star text-2xl w-8 h-8 cursor-pointer fill-current text-gray-400"
@@ -87,7 +87,5 @@
                 </form>
             </div>
         </div>
-        @endif
-    </div>
-
-    <script></script>
+    @endauth
+</div>

@@ -16,6 +16,8 @@ use App\Models\Favorite_world;
 use App\Models\Visited_world;
 use App\Models\World;
 
+use App\Http\Controllers\WorldController;
+
 class UserController extends Controller
 {
     public function userpage($user_name)
@@ -117,7 +119,7 @@ class UserController extends Controller
             $worlds = [];
             $client = new Client();
             foreach ($world_ids as $world_id) {
-                array_push($worlds, $this->getWorldByID($world_id->world_id, $client));
+                array_push($worlds, WorldController::getWorldByID($world_id->world_id, $client));
             }
         } catch (ModelNotFoundException $e) {
             return null;
@@ -132,37 +134,11 @@ class UserController extends Controller
             $worlds = [];
             $client = new Client();
             foreach ($world_ids as $world_id) {
-                array_push($worlds, $this->getWorldByID($world_id->world_id, $client));
+                array_push($worlds, WorldController::getWorldByID($world_id->world_id, $client));
             }
         } catch (ModelNotFoundException $e) {
             return null;
         }
         return $worlds;
-    }
-
-    private function getWorldByID($world_id, $client)
-    {
-        $cookieJar = CookieJar::fromArray([
-            'auth' => Cache::get('authcookieJar')->toArray()[0]["Value"]
-        ], 'vrchat.com');
-
-        $url = 'https://api.vrchat.com/api/1/worlds/' . $world_id;
-
-        if (!$client) {
-            $client = new Client();
-        }
-
-        try {
-            $response = $client->request('GET', $url, [
-                'cookies' => $cookieJar,
-            ]);
-        } catch (Exception $e) {
-            dump($e);
-            return null;
-        }
-
-        $world = json_decode($response->getBody());
-
-        return $world;
     }
 }
