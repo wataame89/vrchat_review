@@ -35,11 +35,12 @@ class WorldController extends Controller
         $worlds = $this->searchWorlds($queryParams);
         // \Debugbar::addMessage($worlds);
         // \Debugbar::addMessage(Cache::get('authcookieJar'));
-        dump($worlds);
+        // dump($worlds);
         if ($worlds) {
             $status = 'Status: VRChat authorized';
         } else {
             $status = 'Status: VRChat not authorized';
+            return redirect("/auth_2FA");
         }
         return view('worlds/home', compact(
             'worlds',
@@ -66,7 +67,7 @@ class WorldController extends Controller
             'search' => $search['keyword'],
             // 'tag' => '',
             // 'notag' => '',
-            'n' => '36',
+            'n' => '24',
             // 'offset' => '999'
         ];
 
@@ -134,7 +135,7 @@ class WorldController extends Controller
             $review["username"] = User::where('id', $review["user_id"])->first()["name"];
         }
 
-        dump($world);
+        // dump($world);
         // dump($reviews);
 
         return view('worlds/world', compact(
@@ -180,7 +181,6 @@ class WorldController extends Controller
 
         $worlds = json_decode($response->getBody());
 
-        $client = new Client();
         foreach ($worlds as $world) {
             $world->imageUrl = WorldController::getRedirectUrl($client, $world->imageUrl);
         }
@@ -208,7 +208,6 @@ class WorldController extends Controller
 
         $world = json_decode($response->getBody());
 
-        $client = new Client();
         $world->imageUrl = WorldController::getRedirectUrl($client, $world->imageUrl);
 
         return $world;
@@ -218,7 +217,7 @@ class WorldController extends Controller
     {
         try {
             $response = $client->request('GET', $prevUrl, [
-                'allow_redirects' => false
+                'allow_redirects' => false,
             ]);
             if ($response->getStatusCode() >= 300 && $response->getStatusCode() < 400) {
                 return $response->getHeaderLine('Location');
@@ -227,6 +226,7 @@ class WorldController extends Controller
             dump($e);
             return null;
         }
+        return $prevUrl;
     }
 
     function paginateArray(array $items, $perPage = 10, $page = null, $options = [])
