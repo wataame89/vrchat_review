@@ -4,6 +4,7 @@
 ## URL
 **VRChat Review**  
 https://vrchat-review-7928b36ce9a9.herokuapp.com/  
+(認証のため、数秒かかる場合があります)
 <br />
 
 **テストアカウント**  
