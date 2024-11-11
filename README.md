@@ -1,10 +1,10 @@
 ![ヘッダー画像](/public/img/header.png)
+# VRChat Review : 「口コミ特化型ワールド検索サイト」
 
-<br />
-
-## アプリケーションのURL
+## URL
 **VRChat Review**  
 https://vrchat-review-7928b36ce9a9.herokuapp.com/  
+<br />
 
 **テストアカウント**  
 Mail : test_user0@mail  
@@ -20,7 +20,7 @@ PASS : test_pass0
 
 <br />
 
-## アプリケーションのイメージ
+## デモ動画
 
 https://github.com/user-attachments/assets/c101be3e-9e15-468f-aa3b-8614761a3abb
 
@@ -30,7 +30,7 @@ https://github.com/user-attachments/assets/c101be3e-9e15-468f-aa3b-8614761a3abb
 | トップ画面 |　ログイン画面 |
 | ---- | ---- |
 | ![Top画面](/public/img/home_all.png) | ![ログイン画面](/public/img/login_all.png) |
-| 現在人気のワールドを表示しています。 | ログインIDとパスワードでの認証機能を実装しました。 |
+| 現在人気のワールドを表示しています。 | メールアドレスとパスワードでの認証機能を実装しました。 |
 
 | ワールド検索画面 |　ワールド詳細画面 |
 | ---- | ---- |
