@@ -20,7 +20,7 @@ class VRChatController extends Controller
     public function auth_2FA()
     {
         $response1 = $this->auth_2FA_first();
-        sleep(5);
+        sleep(3);
         $response2 = $this->auth_2FA_second(new Request);
         // return view('vrchat/2fa');
         return redirect("/");
